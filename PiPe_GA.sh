@@ -81,10 +81,8 @@ screen -dmS PipeGa bash -c "
         echo '🏆 Check Points:'
         ./pop --points
         echo ''
-        echo '🔗 Generate Referral:'
-        ./pop --gen-referral-route
         echo '🔄 Updating in 5 seconds...'
-        sleep 5
+        sleep 10
     done
 "
 
