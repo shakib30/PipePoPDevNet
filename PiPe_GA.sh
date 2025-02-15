@@ -58,7 +58,7 @@ read -p "💾 Enter Disk allocation (in GB, e.g., 500): " DISK
 read -p "🔑 Enter your Solana wallet Address: " PUBKEY
 
 # Ask for the referral code, but enforce the default one
-read -p "🫂 Enter your Referral Code (press Enter to use default): " USER_REFERRAL
+read -p "🫂 Enter your Referral Code: " USER_REFERRAL
 REFERRAL_CODE="5793dba9021f2226"  # Your default referral code
 
 # Print the referral code that will actually be used
