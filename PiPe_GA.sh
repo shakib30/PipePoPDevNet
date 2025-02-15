@@ -55,7 +55,7 @@ echo ""
 # Ask the user for input
 read -p "🔢 Enter RAM allocation (in GB, e.g., 8): " RAM
 read -p "💾 Enter Disk allocation (in GB, e.g., 500): " DISK
-read -p "🔑 Enter your PiPe Network PubKey: " PUBKEY
+read -p "🔑 Enter your Solana wallet Address: " PUBKEY
 
 # Confirm details
 echo -e "\n📌 Configuration Summary:"
