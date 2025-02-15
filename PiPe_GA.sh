@@ -1,7 +1,50 @@
 #!/bin/bash
 
-# Display ASCII Art
-echo -e "\n🚀 Welcome to the PiPe Network Node Installer 🚀\n"
+printf "\n"
+cat <<EOF
+
+
+░██████╗░░█████╗░  ░█████╗░██████╗░██╗░░░██╗██████╗░████████╗░█████╗░
+██╔════╝░██╔══██╗  ██╔══██╗██╔══██╗╚██╗░██╔╝██╔══██╗╚══██╔══╝██╔══██╗
+██║░░██╗░███████║  ██║░░╚═╝██████╔╝░╚████╔╝░██████╔╝░░░██║░░░██║░░██║
+██║░░╚██╗██╔══██║  ██║░░██╗██╔══██╗░░╚██╔╝░░██╔═══╝░░░░██║░░░██║░░██║
+╚██████╔╝██║░░██║  ╚█████╔╝██║░░██║░░░██║░░░██║░░░░░░░░██║░░░╚█████╔╝
+░╚═════╝░╚═╝░░╚═╝  ░╚════╝░╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░░░░░░░╚═╝░░░░╚════╝░
+EOF
+
+printf "\n\n"
+
+##########################################################################################
+#                                                                                        
+#                🚀 THIS SCRIPT IS PROUDLY CREATED BY **GA CRYPTO**! 🚀                 
+#                                                                                        
+#   🌐 Join our revolution in decentralized networks and crypto innovation!               
+#                                                                                        
+# 📢 Stay updated:                                                                      
+#     • Follow us on Telegram: https://t.me/GaCryptOfficial                             
+#     • Follow us on X: https://x.com/GACryptoO                                         
+##########################################################################################
+
+# Green color for advertisement
+GREEN="\033[0;32m"
+RESET="\033[0m"
+
+# Print the advertisement using printf
+printf "${GREEN}"
+printf "🚀 THIS SCRIPT IS PROUDLY CREATED BY **GA CRYPTO**! 🚀\n"
+printf "Stay connected for updates:\n"
+printf "   • Telegram: https://t.me/GaCryptOfficial\n"
+printf "   • X (formerly Twitter): https://x.com/GACryptoO\n"
+printf "${RESET}"
+
+# Installation and configuration process starts here
+echo "==========================================================="
+echo "🚀  Welcome to the PiPe Network Node Installer 🚀"
+echo "==========================================================="
+echo ""
+echo "🌟 Your journey to decentralized networks begins here!"
+echo "✨ Follow the steps as the script runs automatically for you!"
+echo ""
 
 # Ask the user for configuration inputs
 read -p "🔢 Enter RAM allocation (in GB, e.g., 8): " RAM
