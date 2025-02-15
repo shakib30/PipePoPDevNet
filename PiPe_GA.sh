@@ -16,7 +16,7 @@ printf "\n\n"
 
 ##########################################################################################
 #                                                                                        
-#                🚀 THIS SCRIPT IS PROUDLY CREATED BY **GA CRYPTO**! 🚀                 
+#                🚀 THIS SCRIPT IS PROUDLY CREATED BY **GA CRYPTO**! 🚀                  
 #                                                                                        
 #   🌐 Join our revolution in decentralized networks and crypto innovation!               
 #                                                                                        
@@ -25,11 +25,11 @@ printf "\n\n"
 #     • Follow us on X: https://x.com/GACryptoO                                         
 ##########################################################################################
 
-# Green color for advertisement
+# Define colors
 GREEN="\033[0;32m"
 RESET="\033[0m"
 
-# Print the advertisement using printf
+# Print welcome message
 printf "${GREEN}"
 printf "🚀 THIS SCRIPT IS PROUDLY CREATED BY **GA CRYPTO**! 🚀\n"
 printf "Stay connected for updates:\n"
@@ -37,7 +37,7 @@ printf "   • Telegram: https://t.me/GaCryptOfficial\n"
 printf "   • X (formerly Twitter): https://x.com/GACryptoO\n"
 printf "${RESET}"
 
-# Installation and configuration process starts here
+# Installation process starts here
 echo "==========================================================="
 echo "🚀  Welcome to the PiPe Network Node Installer 🚀"
 echo "==========================================================="
@@ -46,7 +46,7 @@ echo "🌟 Your journey to decentralized networks begins here!"
 echo "✨ Follow the steps as the script runs automatically for you!"
 echo ""
 
-# Ask the user for configuration inputs
+# Ask the user for input
 read -p "🔢 Enter RAM allocation (in GB, e.g., 8): " RAM
 read -p "💾 Enter Disk allocation (in GB, e.g., 500): " DISK
 read -p "🔑 Enter your PiPe Network PubKey: " PUBKEY
@@ -62,11 +62,11 @@ if [[ "$CONFIRM" != "y" ]]; then
     exit 1
 fi
 
-# Update system packages
+# Update system
 echo -e "\n🔄 Updating system packages..."
 sudo apt update -y && sudo apt upgrade -y
 
-# Install required dependencies
+# Install dependencies
 echo -e "\n⚙️ Installing required dependencies..."
 sudo apt install -y curl wget jq unzip screen
 
@@ -78,18 +78,18 @@ mkdir -p ~/pipe-node && cd ~/pipe-node
 echo -e "\n⬇️ Downloading PiPe Network node (pop)..."
 curl -L -o pop "https://dl.pipecdn.app/v0.2.5/pop"
 
-# Make the binary executable
+# Make binary executable
 chmod +x pop
 
-# Verify the installation
+# Verify installation
 echo -e "\n🔍 Verifying pop binary..."
 ./pop --version || { echo "❌ Error: pop binary is not working!"; exit 1; }
 
-# Create the download cache directory
+# Create download cache directory
 echo -e "\n📂 Creating download cache directory..."
 mkdir -p download_cache
 
-# Signup using the referral route
+# Sign up using referral
 echo -e "\n📌 Signing up for PiPe Network using referral..."
 ./pop --signup-by-referral-route d93ec7a125f095ab
 if [ $? -ne 0 ]; then
@@ -97,7 +97,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Start the PiPe node
+# Start PiPe node
 echo -e "\n🚀 Starting PiPe Network node..."
 ./pop --ram "$RAM" --max-disk "$DISK" --cache-dir /data --pubKey "$PUBKEY" &
 
@@ -113,23 +113,26 @@ EOF
 
 echo -e "\n✅ Node information saved! (nano ~/node_info.json to edit)"
 
-# Create a screen session and start monitoring
-echo -e "\n📟 Creating a screen session named 'PipeGa'..."
-screen -dmS PipeGa bash -c "
-    cd ~/pipe-node
-    while true; do
-        echo '📊 Node Status:'
-        ./pop --status
-        echo ''
-        echo '🏆 Check Points:'
-        ./pop --points
-        echo ''
-        echo '🔄 Updating in 5 seconds...'
-        sleep 10
-    done
-"
-
-# Attach user to the screen session
-echo -e "\n✅ PiPe Node is now running inside 'PipeGa' screen session."
-echo "👉 To view logs, use: screen -r PipeGa"
-echo "👉 To detach from screen, press: Ctrl+A then D"
+# Check if "PipeGa" screen session exists
+if screen -list | grep -q "PipeGa"; then
+    echo -e "\n🔄 Resuming existing 'PipeGa' screen session..."
+    screen -r PipeGa
+else
+    echo -e "\n📟 Creating a new screen session named 'PipeGa'..."
+    screen -dmS PipeGa bash -c "
+        cd ~/pipe-node
+        while true; do
+            echo '📊 Node Status:'
+            ./pop --status
+            echo ''
+            echo '🏆 Check Points:'
+            ./pop --points
+            echo ''
+            echo '🔄 Updating in 10 seconds...'
+            sleep 10
+        done
+    "
+    echo -e "\n✅ PiPe Node is now running inside 'PipeGa' screen session."
+    echo "👉 To view logs, use: screen -r PipeGa"
+    echo "👉 To detach from screen, press: Ctrl+A then D"
+fi
