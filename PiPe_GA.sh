@@ -37,7 +37,13 @@ printf "   • Telegram: https://t.me/GaCryptOfficial\n"
 printf "   • X (formerly Twitter): https://x.com/GACryptoO\n"
 printf "${RESET}"
 
-# Installation process starts here
+# Check if the "pipega" screen session exists
+if screen -list | grep -q "pipega"; then
+    echo -e "\n✅ Existing 'pipega' screen session found! Resuming it..."
+    screen -r pipega
+    exit 0
+fi
+
 echo "==========================================================="
 echo "🚀  Welcome to the PiPe Network Node Installer 🚀"
 echo "==========================================================="
@@ -99,7 +105,7 @@ fi
 
 # Start PiPe node
 echo -e "\n🚀 Starting PiPe Network node..."
-./pop --ram "$RAM" --max-disk "$DISK" --cache-dir /data --pubKey "$PUBKEY" &
+sudo ./pop --ram "$RAM" --max-disk "$DISK" --cache-dir /data --pubKey "$PUBKEY" &
 
 # Save node information
 echo -e "\n📜 Saving node information..."
@@ -113,26 +119,22 @@ EOF
 
 echo -e "\n✅ Node information saved! (nano ~/node_info.json to edit)"
 
-# Check if "PipeGa" screen session exists
-if screen -list | grep -q "PipeGa"; then
-    echo -e "\n🔄 Resuming existing 'PipeGa' screen session..."
-    screen -r PipeGa
-else
-    echo -e "\n📟 Creating a new screen session named 'PipeGa'..."
-    screen -dmS PipeGa bash -c "
-        cd ~/pipe-node
-        while true; do
-            echo '📊 Node Status:'
-            ./pop --status
-            echo ''
-            echo '🏆 Check Points:'
-            ./pop --points
-            echo ''
-            echo '🔄 Updating in 10 seconds...'
-            sleep 10
-        done
-    "
-    echo -e "\n✅ PiPe Node is now running inside 'PipeGa' screen session."
-    echo "👉 To view logs, use: screen -r PipeGa"
-    echo "👉 To detach from screen, press: Ctrl+A then D"
-fi
+# Create a new screen session
+echo -e "\n📟 Creating a new screen session named 'pipega'..."
+screen -dmS pipega bash -c "
+    cd ~/pipe-node
+    while true; do
+        echo '📊 Node Status:'
+        ./pop --status
+        echo ''
+        echo '🏆 Check Points:'
+        ./pop --points
+        echo ''
+        echo '🔄 Updating in 10 seconds...'
+        sleep 10
+    done
+"
+
+echo -e "\n✅ PiPe Node is now running inside 'pipega' screen session."
+echo "👉 To view logs, use: screen -r pipega"
+echo "👉 To detach from screen, press: Ctrl+A then D"
