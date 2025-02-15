@@ -103,6 +103,10 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# Generate referral
+echo -e "\n🫂 Your Referrral Code..."
+./pop --gen-referral-route
+
 # Start PiPe node
 echo -e "\n🚀 Starting PiPe Network node..."
 sudo ./pop --ram "$RAM" --max-disk "$DISK" --cache-dir /data --pubKey "$PUBKEY" &
