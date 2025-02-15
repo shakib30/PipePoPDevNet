@@ -1,44 +1,49 @@
 #!/bin/bash
 
-# Welcome Message
+# Banner
+echo "🚀 Setting up PiPe Node for DevNet-2 🚀"
 echo "======================================"
-echo "🚀 Pipe Network DevNet 2 Node Setup 🚀"
-echo "======================================"
 
-# Ask for RAM in GB
-read -p "Enter the amount of RAM to allocate (GB): " RAM
-
-# Ask for Disk Space in GB
-read -p "Enter the maximum disk space to allocate (GB): " DISK
-
-# Ask for Solana Public Key
+# Ask user for input
+read -p "Enter RAM allocation (e.g., 4G, 8G): " RAM
+read -p "Enter Disk space allocation (e.g., 100G, 200G): " DISK
 read -p "Enter your Solana Public Key: " PUBKEY
 
-# Set up directory
-INSTALL_DIR="/opt/pipe"
-sudo mkdir -p $INSTALL_DIR
-cd $INSTALL_DIR || exit
+# Install dependencies
+echo "🔄 Updating system and installing dependencies..."
+sudo apt update && sudo apt install -y curl wget jq unzip
 
-# Download and set permissions for pop binary
-curl -L -o pop "https://dl.pipecdn.app/v0.2.5/pop"
+# Create necessary directories
+echo "📂 Creating necessary directories..."
+mkdir -p ~/pipe-node && cd ~/pipe-node
+
+# Download the `pop` binary
+echo "⬇️ Downloading PiPe Network node (pop)..."
+wget -O pop https://github.com/pipe-network/pop/releases/latest/download/pop-linux-amd64
+
+# Make it executable
 chmod +x pop
 
-# Create a cache directory
-mkdir -p download_cache
+# Verify if pop exists
+if [[ ! -f "./pop" ]]; then
+    echo "❌ Error: pop binary not found! Download might have failed."
+    exit 1
+fi
 
-# Signining up into node
+# Initialize the node
+echo "🚀 Initializing PiPe Node..."
+./pop init --ram $RAM --disk $DISK --identity $PUBKEY
+
+# Signing up into node
+echo "Signing up into node"
 ./pop --signup-by-referral-route d93ec7a125f095ab
 
-# Run the node with user-defined settings
-./pop \
-  --ram $RAM \
-  --max-disk $DISK \
-  --cache-dir "$INSTALL_DIR/download_cache" \
-  --pubKey $PUBKEY
+# Start the node
+echo "🚀 Starting PiPe Node..."
+./pop start
 
-# Display status
-./pop --status
+# Check node status
+echo "🔍 Checking node status..."
+./pop status
 
-echo "======================================"
-echo "✅ Pipe Network DevNet 2 Node Started Successfully!"
-echo "======================================"
+echo "🎉 PiPe Node setup complete!"
