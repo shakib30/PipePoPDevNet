@@ -97,7 +97,7 @@ mkdir -p download_cache
 
 # Sign up using referral
 echo -e "\n📌 Signing up for PiPe Network using referral..."
-./pop --signup-by-referral-route d93ec7a125f095ab
+./pop --signup-by-referral-route 90d25d69fd95e47f
 if [ $? -ne 0 ]; then
     echo "❌ Error: Signup failed!"
     exit 1
