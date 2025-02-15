@@ -1,49 +1,76 @@
 #!/bin/bash
 
-# Banner
-echo "🚀 Setting up PiPe Node for DevNet-2 🚀"
-echo "======================================"
+# Display ASCII Art
+echo -e "\n🚀 Welcome to the PiPe Network Node Installer 🚀\n"
 
-# Ask user for input
-read -p "Enter RAM allocation (e.g., 4G, 8G): " RAM
-read -p "Enter Disk space allocation (e.g., 100G, 200G): " DISK
-read -p "Enter your Solana Public Key: " PUBKEY
+# Ask the user for configuration inputs
+read -p "🔢 Enter RAM allocation (in GB, e.g., 4): " RAM
+read -p "💾 Enter Disk allocation (in GB, e.g., 100): " DISK
+read -p "🔑 Enter your PiPe Network PubKey: " PUBKEY
 
-# Install dependencies
-echo "🔄 Updating system and installing dependencies..."
-sudo apt update && sudo apt install -y curl wget jq unzip
-
-# Create necessary directories
-echo "📂 Creating necessary directories..."
-mkdir -p ~/pipe-node && cd ~/pipe-node
-
-# Download the `pop` binary
-echo "⬇️ Downloading PiPe Network node (pop)..."
-wget -O pop https://github.com/pipe-network/pop/releases/latest/download/pop-linux-amd64
-
-# Make it executable
-chmod +x pop
-
-# Verify if pop exists
-if [[ ! -f "./pop" ]]; then
-    echo "❌ Error: pop binary not found! Download might have failed."
+# Confirm details
+echo -e "\n📌 Configuration Summary:"
+echo "   🔢 RAM: ${RAM}GB"
+echo "   💾 Disk: ${DISK}GB"
+echo "   🔑 PubKey: ${PUBKEY}"
+read -p "⚡ Proceed with installation? (y/n): " CONFIRM
+if [[ "$CONFIRM" != "y" ]]; then
+    echo "❌ Installation canceled!"
     exit 1
 fi
 
-# Initialize the node
-echo "🚀 Initializing PiPe Node..."
-./pop init --ram $RAM --disk $DISK --identity $PUBKEY
+# Update system packages
+echo -e "\n🔄 Updating system packages..."
+sudo apt update -y && sudo apt upgrade -y
 
-# Signing up into node
-echo "Signing up into node"
+# Install required dependencies
+echo -e "\n⚙️ Installing required dependencies..."
+sudo apt install -y curl wget jq unzip screen
+
+# Create a directory for PiPe node
+echo -e "\n📂 Setting up PiPe node directory..."
+mkdir -p ~/pipe-node && cd ~/pipe-node
+
+# Download the latest PiPe Network binary (pop)
+echo -e "\n⬇️ Downloading PiPe Network node (pop)..."
+curl -L -o pop "https://dl.pipecdn.app/v0.2.5/pop"
+
+# Make the binary executable
+chmod +x pop
+
+# Verify the installation
+echo -e "\n🔍 Verifying pop binary..."
+./pop --version || { echo "❌ Error: pop binary is not working!"; exit 1; }
+
+# Signup using the referral route
+echo -e "\n📌 Signing up for PiPe Network using referral..."
 ./pop --signup-by-referral-route d93ec7a125f095ab
+if [ $? -ne 0 ]; then
+    echo "❌ Error: Signup failed!"
+    exit 1
+fi
 
-# Start the node
-echo "🚀 Starting PiPe Node..."
-./pop start
+# Create a screen session and start the PiPe node
+echo -e "\n📟 Creating a screen session named 'PipeGa'..."
+screen -dmS PipeGa bash -c "
+    cd ~/pipe-node
+    echo '🚀 Starting PiPe Network node...'
+    ./pop run --ram=${RAM}GB --disk=${DISK}GB --pubkey=${PUBKEY} &
+    sleep 10
 
-# Check node status
-echo "🔍 Checking node status..."
-./pop status
+    # Loop every 5 seconds to show Node Status & Check Points
+    while true; do
+        echo '📊 Node Status:'
+        ./pop --status
+        echo ''
+        echo '🏆 Check Points:'
+        ./pop --points
+        echo '🔄 Updating in 5 seconds...'
+        sleep 5
+    done
+"
 
-echo "🎉 PiPe Node setup complete!"
+# Attach user to the screen session
+echo -e "\n✅ PiPe Node is now running inside 'PipeGa' screen session."
+echo "👉 To view logs, use: screen -r PipeGa"
+echo "👉 To detach from screen, press: Ctrl+A then D"
