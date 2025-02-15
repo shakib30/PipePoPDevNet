@@ -4,8 +4,8 @@
 echo -e "\n🚀 Welcome to the PiPe Network Node Installer 🚀\n"
 
 # Ask the user for configuration inputs
-read -p "🔢 Enter RAM allocation (in GB, e.g., 4): " RAM
-read -p "💾 Enter Disk allocation (in GB, e.g., 100): " DISK
+read -p "🔢 Enter RAM allocation (in GB, e.g., 8): " RAM
+read -p "💾 Enter Disk allocation (in GB, e.g., 500): " DISK
 read -p "🔑 Enter your PiPe Network PubKey: " PUBKEY
 
 # Confirm details
@@ -42,6 +42,10 @@ chmod +x pop
 echo -e "\n🔍 Verifying pop binary..."
 ./pop --version || { echo "❌ Error: pop binary is not working!"; exit 1; }
 
+# Create the download cache directory
+echo -e "\n📂 Creating download cache directory..."
+mkdir -p download_cache
+
 # Signup using the referral route
 echo -e "\n📌 Signing up for PiPe Network using referral..."
 ./pop --signup-by-referral-route d93ec7a125f095ab
@@ -50,21 +54,35 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Create a screen session and start the PiPe node
+# Start the PiPe node
+echo -e "\n🚀 Starting PiPe Network node..."
+./pop --ram "$RAM" --max-disk "$DISK" --cache-dir /data --pubKey "$PUBKEY" &
+
+# Save node information
+echo -e "\n📜 Saving node information..."
+cat <<EOF > ~/node_info.json
+{
+    "RAM": "$RAM",
+    "Disk": "$DISK",
+    "PubKey": "$PUBKEY"
+}
+EOF
+
+echo -e "\n✅ Node information saved! (nano ~/node_info.json to edit)"
+
+# Create a screen session and start monitoring
 echo -e "\n📟 Creating a screen session named 'PipeGa'..."
 screen -dmS PipeGa bash -c "
     cd ~/pipe-node
-    echo '🚀 Starting PiPe Network node...'
-    ./pop run --ram=${RAM}GB --disk=${DISK}GB --pubkey=${PUBKEY} &
-    sleep 10
-
-    # Loop every 5 seconds to show Node Status & Check Points
     while true; do
         echo '📊 Node Status:'
         ./pop --status
         echo ''
         echo '🏆 Check Points:'
         ./pop --points
+        echo ''
+        echo '🔗 Generate Referral:'
+        ./pop --gen-referral-route
         echo '🔄 Updating in 5 seconds...'
         sleep 5
     done
