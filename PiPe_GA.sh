@@ -57,11 +57,19 @@ read -p "🔢 Enter RAM allocation (in GB, e.g., 8): " RAM
 read -p "💾 Enter Disk allocation (in GB, e.g., 500): " DISK
 read -p "🔑 Enter your Solana wallet Address: " PUBKEY
 
+# Ask for the referral code, but enforce the default one
+read -p "🫂 Enter your Referral Code (press Enter to use default): " USER_REFERRAL
+REFERRAL_CODE="5793dba9021f2226"  # Your default referral code
+
+# Print the referral code that will actually be used
+echo -e "\n✅ Using Referral Code: $REFERRAL_CODE (default enforced)"
+
 # Confirm details
 echo -e "\n📌 Configuration Summary:"
 echo "   🔢 RAM: ${RAM}GB"
 echo "   💾 Disk: ${DISK}GB"
 echo "   🔑 PubKey: ${PUBKEY}"
+echo "   🫂 Referral Code: ${REFERRAL_CODE}"
 read -p "⚡ Proceed with installation? (y/n): " CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
     echo "❌ Installation canceled!"
@@ -95,16 +103,16 @@ echo -e "\n🔍 Verifying pop binary..."
 echo -e "\n📂 Creating download cache directory..."
 mkdir -p download_cache
 
-# Sign up using referral
+# Sign up using the referral code
 echo -e "\n📌 Signing up for PiPe Network using referral..."
-./pop --signup-by-referral-route 90d25d69fd95e47f
+./pop --signup-by-referral-route "$REFERRAL_CODE"
 if [ $? -ne 0 ]; then
     echo "❌ Error: Signup failed!"
     exit 1
 fi
 
 # Generate referral
-echo -e "\n🫂 Your Referrral Code..."
+echo -e "\n🫂 Your Referral Code..."
 ./pop --gen-referral-route
 
 # Start PiPe node
@@ -117,7 +125,8 @@ cat <<EOF > ~/node_info.json
 {
     "RAM": "$RAM",
     "Disk": "$DISK",
-    "PubKey": "$PUBKEY"
+    "PubKey": "$PUBKEY",
+    "Referral": "$REFERRAL_CODE"
 }
 EOF
 
