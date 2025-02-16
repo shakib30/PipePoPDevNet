@@ -12,11 +12,8 @@ cat <<EOF
 ░╚═════╝░╚═╝░░╚═╝  ░╚════╝░╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░░░░░░░╚═╝░░░░╚════╝░
 EOF
 
-printf "\n\n"
-
 # Create a new screen session
-echo -e "\n📟 Creating a new screen session named 'pipega'..."
-screen -dmS pipega bash -c "
+echo -e "\n📟 Resuming Pipe Point Status"
     cd ~/pipe-node
     while true; do
         echo '📊 Node Status:'
