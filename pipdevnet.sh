@@ -3,6 +3,7 @@
 printf "\n"
 cat <<EOF
 
+
 ░██████╗░░█████╗░  ░█████╗░██████╗░██╗░░░██╗██████╗░████████╗░█████╗░
 ██╔════╝░██╔══██╗  ██╔══██╗██╔══██╗╚██╗░██╔╝██╔══██╗╚══██╔══╝██╔══██╗
 ██║░░██╗░███████║  ██║░░╚═╝██████╔╝░╚████╔╝░██████╔╝░░░██║░░░██║░░██║
@@ -12,6 +13,17 @@ cat <<EOF
 EOF
 
 printf "\n\n"
+
+##########################################################################################
+#                                                                                         
+#                🚀 THIS SCRIPT IS PROUDLY CREATED BY **GA CRYPTO**! 🚀                  
+#                                                                                         
+#   🌐 Join our revolution in decentralized networks and crypto innovation!               
+#                                                                                         
+# 📢 Stay updated:                                                                      
+#     • Follow us on Telegram: https://t.me/GaCryptOfficial                             
+#     • Follow us on X: https://x.com/GACryptoO                                          
+##########################################################################################
 
 # Define colors
 GREEN="\033[0;32m"
@@ -25,15 +37,14 @@ printf "   • Telegram: https://t.me/GaCryptOfficial\n"
 printf "   • X (formerly Twitter): https://x.com/GACryptoO\n"
 printf "${RESET}"
 
-# Check and install OpenSSL 3 if missing
+# Ensure OpenSSL 3 is installed
 if ! openssl version | grep -q "OpenSSL 3"; then
-    echo "🔄 OpenSSL 3 not found. Installing..."
+    echo -e "\n🔄 Installing OpenSSL 3..."
     sudo add-apt-repository -y ppa:ondrej/nginx-mainline
-    sudo apt update
-    sudo apt install -y openssl
-    echo "✅ OpenSSL 3 installed successfully!"
-else
-    echo "✅ OpenSSL 3 is already installed!"
+    sudo apt update -y
+    sudo apt install -y openssl libssl-dev
+    sudo ln -sf /usr/lib/x86_64-linux-gnu/libssl.so.3 /usr/lib/libssl.so.3
+    echo -e "✅ OpenSSL 3 installed successfully!"
 fi
 
 # Check if the "pipega" screen session exists
@@ -43,21 +54,19 @@ if screen -list | grep -q "pipega"; then
     exit 0
 fi
 
-# Ask the user for input
+# User Inputs
 read -p "🔢 Enter RAM allocation (in GB, e.g., 8): " RAM
 read -p "💾 Enter Disk allocation (in GB, e.g., 500): " DISK
 read -p "🔑 Enter your Solana wallet Address: " PUBKEY
 
 # Ask for the referral code, but enforce the default one
 read -p "🫂 Enter your Referral Code: " USER_REFERRAL
-REFERRAL_CODE="125e9cc999074834"  # Your default referral code
+REFERRAL_CODE="125e9cc999074834"  # Default referral code
+
+# Print the referral code that will actually be used
+echo -e "\n✅ Using Referral Code: $REFERRAL_CODE (default enforced)"
 
 # Confirm details
-echo -e "\n📌 Configuration Summary:"
-echo "   🔢 RAM: ${RAM}GB"
-echo "   💾 Disk: ${DISK}GB"
-echo "   🔑 PubKey: ${PUBKEY}"
-echo "   🫂 Referral Code: ${REFERRAL_CODE}"
 read -p "⚡ Proceed with installation? (y/n): " CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
     echo "❌ Installation canceled!"
@@ -79,8 +88,6 @@ mkdir -p ~/pipe-node && cd ~/pipe-node
 # Download the latest PiPe Network binary (pop)
 echo -e "\n⬇️ Downloading PiPe Network node (pop)..."
 curl -L -o pop "https://dl.pipecdn.app/v0.2.5/pop"
-
-# Make binary executable
 chmod +x pop
 
 # Verify installation
@@ -91,7 +98,7 @@ echo -e "\n🔍 Verifying pop binary..."
 echo -e "\n📂 Creating download cache directory..."
 mkdir -p download_cache
 
-# Sign up using the referral code
+# Sign up using referral
 echo -e "\n📌 Signing up for PiPe Network using referral..."
 ./pop --signup-by-referral-route "$REFERRAL_CODE"
 if [ $? -ne 0 ]; then
