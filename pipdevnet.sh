@@ -3,7 +3,6 @@
 printf "\n"
 cat <<EOF
 
-
 ░██████╗░░█████╗░  ░█████╗░██████╗░██╗░░░██╗██████╗░████████╗░█████╗░
 ██╔════╝░██╔══██╗  ██╔══██╗██╔══██╗╚██╗░██╔╝██╔══██╗╚══██╔══╝██╔══██╗
 ██║░░██╗░███████║  ██║░░╚═╝██████╔╝░╚████╔╝░██████╔╝░░░██║░░░██║░░██║
@@ -13,17 +12,6 @@ cat <<EOF
 EOF
 
 printf "\n\n"
-
-##########################################################################################
-#                                                                                        
-#                🚀 THIS SCRIPT IS PROUDLY CREATED BY **GA CRYPTO**! 🚀                  
-#                                                                                        
-#   🌐 Join our revolution in decentralized networks and crypto innovation!               
-#                                                                                        
-# 📢 Stay updated:                                                                      
-#     • Follow us on Telegram: https://t.me/GaCryptOfficial                             
-#     • Follow us on X: https://x.com/GACryptoO                                         
-##########################################################################################
 
 # Define colors
 GREEN="\033[0;32m"
@@ -37,49 +25,23 @@ printf "   • Telegram: https://t.me/GaCryptOfficial\n"
 printf "   • X (formerly Twitter): https://x.com/GACryptoO\n"
 printf "${RESET}"
 
+# Check and install OpenSSL 3 if missing
+if ! openssl version | grep -q "OpenSSL 3"; then
+    echo "🔄 OpenSSL 3 not found. Installing..."
+    sudo add-apt-repository -y ppa:ondrej/nginx-mainline
+    sudo apt update
+    sudo apt install -y openssl
+    echo "✅ OpenSSL 3 installed successfully!"
+else
+    echo "✅ OpenSSL 3 is already installed!"
+fi
+
 # Check if the "pipega" screen session exists
 if screen -list | grep -q "pipega"; then
     echo -e "\n✅ Existing 'pipega' screen session found! Resuming it..."
     screen -r pipega
     exit 0
 fi
-
-# Function to install OpenSSL 3 if missing
-install_openssl3() {
-    echo -e "\n🔍 Checking OpenSSL version..."
-    if ! openssl version | grep -q "OpenSSL 3"; then
-        echo "❌ OpenSSL 3 not found. Installing now..."
-        if grep -q "Ubuntu 22" /etc/os-release; then
-            sudo apt update && sudo apt install -y libssl3
-        elif grep -q "Ubuntu 20" /etc/os-release; then
-            sudo add-apt-repository -y ppa:ci-train-ppa-service/4406
-            sudo apt update && sudo apt install -y openssl libssl-dev
-        else
-            echo "⚠️ Unsupported Ubuntu version. Please install OpenSSL 3 manually."
-            exit 1
-        fi
-    else
-        echo "✅ OpenSSL 3 is already installed."
-    fi
-}
-
-# Call OpenSSL installation function
-install_openssl3
-
-# Ensure libssl.so.3 exists
-if ! ldconfig -p | grep -q "libssl.so.3"; then
-    echo "🔗 Creating symlink for libssl.so.3..."
-    sudo ln -s /usr/lib/x86_64-linux-gnu/libssl.so.3 /usr/lib/libssl.so.3
-    sudo ldconfig
-fi
-
-echo "==========================================================="
-echo "🚀  Welcome to the PiPe Network Node Installer 🚀"
-echo "==========================================================="
-echo ""
-echo "🌟 Your journey to decentralized networks begins here!"
-echo "✨ Follow the steps as the script runs automatically for you!"
-echo ""
 
 # Ask the user for input
 read -p "🔢 Enter RAM allocation (in GB, e.g., 8): " RAM
@@ -89,9 +51,6 @@ read -p "🔑 Enter your Solana wallet Address: " PUBKEY
 # Ask for the referral code, but enforce the default one
 read -p "🫂 Enter your Referral Code: " USER_REFERRAL
 REFERRAL_CODE="125e9cc999074834"  # Your default referral code
-
-# Print the referral code that will actually be used
-echo -e "\n✅ Using Referral Code: $REFERRAL_CODE (default enforced)"
 
 # Confirm details
 echo -e "\n📌 Configuration Summary:"
