@@ -54,6 +54,10 @@ if screen -list | grep -q "pipega"; then
     exit 0
 fi
 
+# Ensure OpenSSL libraries are properly linked
+export LD_LIBRARY_PATH=/usr/lib:/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+sudo ldconfig
+
 # User Inputs
 read -p "🔢 Enter RAM allocation (in GB, e.g., 8): " RAM
 read -p "💾 Enter Disk allocation (in GB, e.g., 500): " DISK
